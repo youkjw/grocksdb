@@ -12,7 +12,7 @@ type SSTFileReader struct {
 	c *C.rocksdb_sstfilereader_t
 }
 
-// NewSSTFileWriter creates an SSTFileReader object.
+// NewSSTFileReader creates an SSTFileReader object.
 func NewSSTFileReader(opts *EnvOptions, dbOpts *Options) *SSTFileReader {
 	c := C.rocksdb_sstfilewriter_create(opts.c, dbOpts.c)
 	return &SSTFileReader{c: c}
@@ -34,6 +34,16 @@ func (w *SSTFileReader) Open(path string) (err error) {
 
 func (w *SSTFileReader) NewIterator(dbOpts *ReadOptions) (iter *Iterator) {
 	iter = C.rocksdb_sstfilereader_iterator(w.c, dbOpts.c)
+	return
+}
+
+// Verifies whether there is corruption in this table.
+func (w *SSTFileReader) VerifyChecksum(dbOpts *ReadOptions) (err error) {
+	var (
+		cErr *C.char
+	)
+	C.rocksdb_sstfilereader_verifychecksum(w.c, &cErr)
+	err = fromCError(cErr)
 	return
 }
 
