@@ -42,7 +42,7 @@ func (w *SSTFileReader) VerifyChecksum(dbOpts *ReadOptions) (err error) {
 	var (
 		cErr *C.char
 	)
-	C.rocksdb_sstfilereader_verifychecksum(w.c, &cErr)
+	C.rocksdb_sstfilereader_verifychecksum(w.c, dbOpts.c, &cErr)
 	err = fromCError(cErr)
 	return
 }
