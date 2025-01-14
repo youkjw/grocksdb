@@ -2,7 +2,6 @@ package grocksdb
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 )
 
@@ -19,12 +18,19 @@ func TestSSTFileWriter(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	for i := 0; i <= 1000; i++ {
-		k, v := fmt.Sprintf("%d", i), fmt.Sprintf("%d", i)
-		if err := writer.Put([]byte(k), []byte(v)); err != nil {
-			t.Fatal(err)
-		}
+	if err := writer.Put([]byte("aaa"), []byte("aaa")); err != nil {
+		t.Fatal(err)
 	}
+	if err := writer.Put([]byte("bbb"), []byte("bbb")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Put([]byte("ccc"), []byte("ccc")); err != nil {
+		t.Fatal(err)
+	}
+	if err := writer.Put([]byte("ddd"), []byte("ddd")); err != nil {
+		t.Fatal(err)
+	}
+
 	if err := writer.Finish(); err != nil {
 		t.Fatal(err)
 	}
