@@ -4,10 +4,9 @@ import "testing"
 
 func TestSSTFileReader(t *testing.T) {
 	path := "/tmp/test.sst"
-	envOpts := NewDefaultEnvOptions()
 	opts := NewDefaultOptions()
 
-	reader := NewSSTFileReader(envOpts, opts)
+	reader := NewSSTFileReader(opts)
 	defer reader.Destroy()
 	if err := reader.Open(path); err != nil {
 		t.Fatal(err)
@@ -15,9 +14,9 @@ func TestSSTFileReader(t *testing.T) {
 
 	readOpts := NewDefaultReadOptions()
 	iter := reader.NewIterator(readOpts)
-	iter.SeekToFirst()
-	for iter.Valid() {
-		iter.Next()
+	defer iter.Close()
+
+	for iter.SeekToFirst(); iter.Valid(); iter.Next() {
 		t.Logf("key: %s", string(iter.Key().Data()))
 		t.Logf("value: %s", string(iter.Value().Data()))
 	}
